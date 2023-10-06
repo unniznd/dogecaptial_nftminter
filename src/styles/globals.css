@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* styles/globals.css or your custom CSS file */
+
+.wallet-button-container {
+    display: flex;
+    justify-content: flex-end; /* Align children to the right */
+    align-items: center; /* Center children vertically within the container */
+    padding: 10px; /* Add padding for better spacing */
+  }
+  
