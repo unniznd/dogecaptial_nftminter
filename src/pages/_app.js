@@ -27,7 +27,9 @@ export default function App({ Component, pageProps }) {
       <WalletProvider wallets={wallet}>
         <WalletModalProvider>
           <div className="wallet-button-container">
-            <WalletMultiButton></WalletMultiButton>
+            <WalletMultiButton
+            className='wallet-button'
+            ></WalletMultiButton>
           </div>
           <Component {...pageProps} />
         </WalletModalProvider>
