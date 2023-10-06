@@ -23,7 +23,7 @@ const Home = () => {
         <h1 className="text-3xl font-bold text-center mt-8">Dogecaptial NFTMint</h1>
 
         <div className="container mx-auto mt-8 flex justify-center">
-          {wallet.connected ? <NFTMinter /> : <p>Connect Wallet</p>}
+          {wallet.connected ? <NFTMinter /> : <p>Connect Wallet using button on the left top</p>}
         </div>
         
         <ToastContainer />
