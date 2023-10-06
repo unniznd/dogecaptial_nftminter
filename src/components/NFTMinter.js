@@ -10,6 +10,7 @@ const NFTMinter = () => {
   const [imageFile, setImageFile] = useState(null);
   const [isMinting, setMinting] = useState(false); 
   const [nfts, setNFTs] = useState([]); 
+  const [isFetchingNFTs, setFetchingNFTs] = useState(false);
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -31,6 +32,11 @@ const NFTMinter = () => {
 
 
   const getNFts = async () => {
+    if (!wallet.publicKey) {
+      return;
+    }
+
+    setFetchingNFTs(true);
     try {
       const myNfts = await mx.nfts().findAllByOwner({
         owner: wallet.publicKey.toBase58(),
@@ -53,9 +59,12 @@ const NFTMinter = () => {
   
       const fetchedNFTs = await Promise.all(nftPromises);
       setNFTs(fetchedNFTs);
+      
     } catch (error) {
       console.error(error);
       toast.error('Error fetching NFT. Please try again later.');
+    }finally{
+      setFetchingNFTs(false);
     }
   };
   
@@ -172,11 +181,11 @@ const NFTMinter = () => {
       >
         {isMinting ? 'Minting...' : 'Mint NFT'}
       </button>
-      <div className=''> {/* Center align text */}
+      <div className='text-center'> {/* Center align text */}
         <strong className="text-2xl my-4">Your NFTs:</strong>
-        {nfts.map((nft, index) => (
+        {!isFetchingNFTs ? (nfts.length !== 0 ? nfts.map((nft, index) => (
           <NFTListItem key={index} imageSrc={nft.imageSrc} title={nft.title} />
-        ))}
+        )) : <p className="text-xl">No NFTs minted yet.</p>) : <p className="text-xl">Fetching NFTs...</p>}
       </div>
     </div>
   );
