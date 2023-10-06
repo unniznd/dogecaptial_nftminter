@@ -67,6 +67,33 @@ const NFTMinter = () => {
       setFetchingNFTs(false);
     }
   };
+
+  async function uploadNFTURI(nftURI, walletAddress) {
+    try {
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+  
+      const raw = JSON.stringify({ "nftURI": nftURI, "walletAddress": walletAddress });
+  
+      const requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+      };
+  
+      const response = await fetch("http://localhost:3000/api/nft", requestOptions);
+      const data = await response.text();
+  
+      console.log("Response:", data);
+  
+      return data; // You can handle the response data accordingly in your application
+    } catch (error) {
+      console.error('Error:', error);
+      throw new Error(error); // Throw the error for handling it in your application
+    }
+  }
+  
   
   
 
@@ -117,6 +144,15 @@ const NFTMinter = () => {
                 sellerFeeBasisPoints: 500,
               });
               resolve();
+
+              try{
+                const data = await uploadNFTURI(uri, wallet.publicKey.toBase58());
+                console.log(data);
+              }catch(error){
+                
+                reject(error);
+              }
+
             } catch (error) {
               console.error('Error uploading metadata or minting NFT:', error);
               reject(error);
@@ -135,10 +171,6 @@ const NFTMinter = () => {
 
       setNFTs([mintedNFT, ...nfts]);
 
-      
-
-      // After the minting process is successful, show a success message
-      // reset title description and image
       setTitle('');
       setDescription('');
 
