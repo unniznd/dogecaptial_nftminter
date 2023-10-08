@@ -32,18 +32,18 @@ export default async function handler(req, res) {
       res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
   } else if (req.method === 'GET') {
-    const { walletAddress } = req.body;
+    // response full nfts in schema
     try {
       await connectToDatabase();
-      const nfts = await NFT.find({ walletAddress: walletAddress });
-     
-      res.status(200).json({
-        success: true,
-        message: 'NFTs fetched successfully.',
-        nfts: nfts,
-      });
+      const nfts = await NFT.find({});
+      // create key-value pair with nftURI as key and walletAddress as value
+      const nftsMap = nfts.reduce((map, nft) => {
+        map[nft.nftURI] = nft.walletAddress;
+        return map;
+      }, {});
+
+      res.status(200).json({ success: true, nfts: nftsMap });
     } catch (error) {
-      console.error(error);
       res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
   }else {
