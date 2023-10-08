@@ -137,19 +137,27 @@ const NFTMinter = () => {
                 description: description,
                 image: toMetaplexFile(arrayBuffer, 'image/png'),
               });
+
+              let mintAddress;
       
-              const { mint } = await mx.nfts().create({
+              const { nftMinted } = await mx.nfts().create({
                 uri,
                 name: title,
                 sellerFeeBasisPoints: 500,
+              }).then((data) => {
+                mintAddress = data.mintAddress.toBase58();
+                return data;
               });
-              resolve();
+              resolve(nftMinted);
 
+  
+              console.log("Mint Address:", nftMinted);
+              
               try{
-                const data = await uploadNFTURI(uri, wallet.publicKey.toBase58());
+                const data = await uploadNFTURI(mintAddress, wallet.publicKey.toBase58());
                 console.log(data);
               }catch(error){
-                
+                console.error('Error uploading metadata or minting NFT:', error);
                 reject(error);
               }
 
